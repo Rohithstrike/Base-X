@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base Encoder/Decoder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="content-wrapper">
+        <div class="main-container">
+            <h1>Base Encoder & Decoder</h1>
+            <div class="controls">
+                <div class="select-container">
+                
+                    <select id="baseSelect">
+                        <option value="" disabled selected>Select a base</option>
+                        <script>
+                            for (let i = 2; i <= 100; i++) {
+                                document.write(`<option value="base${i}">Base ${i}</option>`);
+                            }
+                        </script>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button onclick="analyzeBase()">Analyze Base</button>
+                    <button onclick="encodeBase()">Encode</button>
+                    <button onclick="decodeBase()">Decode</button>
+                </div>
+            </div>
+            
+            <div class="input-output-container">
+                <div class="box">
+                    <h2>Input String</h2>
+                    <textarea id="inputString" placeholder="Enter your input here..."></textarea>
+                </div>
+
+                <div class="box">
+                    <h2>Result</h2>
+                    <div id="outputResult" class="output-box"></div>
+                </div>
+            </div>
+
+            <div class="analysis-box">
+                <h2>Cipher Analysis</h2>
+                <div id="cipherResult" class="output-box1"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function processRequest(action) {
+            const baseSelect = document.getElementById('baseSelect');
+            const base = baseSelect.value.toLowerCase(); // Get selected base value
+            const inputString = document.getElementById('inputString').value;
+
+            if (!base) {
+                alert("Please select a base.");
+                return;
+            }
+
+            const response = await fetch('/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ base, inputString }),
+            });
+
+            const data = await response.json();
+            document.getElementById('outputResult').innerText = data.result;
+            document.getElementById('cipherResult').innerText = data.cipherResult;
+        }
+
+        function analyzeBase() {
+            processRequest('analyze');
+        }
+
+        function encodeBase() {
+            processRequest('encode');
+        }
+
+        function decodeBase() {
+            processRequest('decode');
+        }
+    </script>
+</body>
+</html>
