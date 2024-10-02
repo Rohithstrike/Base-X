@@ -46,9 +46,44 @@ def process():
         'base27': base27,
         'base28': base28,
         'base29': base29,
-        'base30': base30
+        'base30': base30,
+        'base31': base31,
+        'base32': base32,
+        'base33': base33,
+        'base34': base34,
+        'base35': base35,
+        'base36': base36,
+        'base37': base37,
+        'base38': base38,
+        'base39': base39,
+        'base40': base40,
+        'base41': base41,
+        'base42': base42,
+        'base43': base43,
+        'base44': base44,
+        'base45': base45,
+        'base46': base46,
+        'base47': base47,
+        'base48': base48,
+        'base49': base49,
+        'base50': base50,
+        'base51': base51,
+        'base52': base52,
+        'base53': base53,
+        'base54': base54,
+        'base55': base55,
+        'base56': base56,
+        'base57': base57,
+        'base58': base58,
+        'base59': base59,
+        'base60': base60,
+        'base61': base61,
+        'base62': base62,
+        'base63': base63,
+        'base64': base64_custom,  # Change here to use the renamed function
+        'base65': base65,
     }
-
+    
     # Check if the selected base is valid and call the corresponding function
     if base in base_functions:
         result = base_functions[base](input_string, action)
