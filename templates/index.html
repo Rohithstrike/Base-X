@@ -3,85 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
     <title>Base Encoder/Decoder</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="content-wrapper">
         <div class="main-container">
-            <h1>Base Encoder & Decoder</h1>
+            <h1>PROJECT BASE X </h1>
+            
             <div class="controls">
                 <div class="select-container">
-                
+                    <label for="baseSelect">Select Base:</label>
                     <select id="baseSelect">
-                        <option value="" disabled selected>Select a base</option>
-                        <script>
-                            for (let i = 2; i <= 100; i++) {
-                                document.write(`<option value="base${i}">Base ${i}</option>`);
-                            }
-                        </script>
+                        <option value="base2">Base 2</option>
+                        <option value="base3">Base 3</option>
+                        <option value="base4">Base 4</option>
+                        <option value="base5">Base 5</option>
+                        <option value="base6">Base 6</option>
+                        <option value="base7">Base 7</option>
+                        <option value="base8">Base 8</option>
+                        <option value="base9">Base 9</option>
+                        <option value="base10">Base 10</option>
+                        <option value="base11">Base 11</option>
+                        <option value="base12">Base 12</option>
+                        <option value="base13">Base 13</option>
+                        <option value="base14">Base 14</option>
+                        <option value="base15">Base 15</option>
+                        <option value="base16">Base 16</option>
+                        <option value="base17">Base 17</option>
+                        <option value="base18">Base 18</option>
+                        <option value="base19">Base 19</option>
+                        <option value="base20">Base 20</option>
+                        <option value="base21">Base 21</option>
+                        <option value="base22">Base 22</option>
+                        <option value="base23">Base 23</option>
+                        <option value="base24">Base 24</option>
+                        <option value="base25">Base 25</option>
+                        <option value="base26">Base 26</option>
+                        <option value="base27">Base 27</option>
+                        <option value="base28">Base 28</option>
+                        <option value="base29">Base 29</option>
+                        <option value="base30">Base 30</option>
                     </select>
                 </div>
+
                 <div class="btn-group">
-                    <button onclick="analyzeBase()">Analyze Base</button>
-                    <button onclick="encodeBase()">Encode</button>
-                    <button onclick="decodeBase()">Decode</button>
+                    <button onclick="processAction('encode')">Encode</button>
+                    <button onclick="processAction('decode')">Decode</button>
                 </div>
             </div>
-            
+
             <div class="input-output-container">
                 <div class="box">
-                    <h2>Input String</h2>
-                    <textarea id="inputString" placeholder="Enter your input here..."></textarea>
+                    <textarea id="inputString" placeholder="Enter string here..."></textarea>
                 </div>
-
                 <div class="box">
-                    <h2>Result</h2>
-                    <div id="outputResult" class="output-box"></div>
+                    <textarea id="outputString" class="output-area" placeholder="Output will be displayed here..." readonly></textarea>
                 </div>
             </div>
 
-            <div class="analysis-box">
-                <h2>Cipher Analysis</h2>
-                <div id="cipherResult" class="output-box1"></div>
-            </div>
+            <footer>
+                <p>&copy; 2024 Rohith B. | Base Encoder/Decoder</p>
+            </footer>
         </div>
     </div>
-    
-    <script>
-        async function processRequest(action) {
-            const baseSelect = document.getElementById('baseSelect');
-            const base = baseSelect.value.toLowerCase(); // Get selected base value
-            const inputString = document.getElementById('inputString').value;
 
-            if (!base) {
-                alert("Please select a base.");
-                return;
-            }
+    <script>
+        async function processAction(action) {
+            const base = document.getElementById('baseSelect').value;
+            const inputString = document.getElementById('inputString').value;
 
             const response = await fetch('/process', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ base, inputString }),
+                body: JSON.stringify({ base, inputString, action })
             });
 
-            const data = await response.json();
-            document.getElementById('outputResult').innerText = data.result;
-            document.getElementById('cipherResult').innerText = data.cipherResult;
-        }
+            const result = await response.json();
 
-        function analyzeBase() {
-            processRequest('analyze');
-        }
-
-        function encodeBase() {
-            processRequest('encode');
-        }
-
-        function decodeBase() {
-            processRequest('decode');
+            if (response.ok) {
+                document.getElementById('outputString').value = result.result;
+            } else {
+                document.getElementById('outputString').value = result.error;
+            }
         }
     </script>
 </body>
