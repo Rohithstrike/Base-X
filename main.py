@@ -7,10 +7,16 @@ BASE85_CHARS = (
     "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&()*+-;<=>?@^_`{|}~"
 )
 
+# Extended character set for bases greater than 85
+EXTENDED_CHARS = (
+    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    "!#$%&()*+-;<=>?@^_`{|}~" + string.ascii_letters + string.punctuation + " "
+)
+
 # Ensure the base is within valid range
 def validate_base(base):
-    if base < 2 or base > 85:
-        raise ValueError("Base must be between 2 and 85.")
+    if base < 2 or base > 100:
+        raise ValueError("Base must be between 2 and 100.")
 
 # Helper function to calculate byte length needed for decoding
 def get_byte_length(number):
@@ -21,16 +27,18 @@ def to_base(num, base):
     validate_base(base)
     if num == 0:
         return '0'
+    chars = BASE85_CHARS if base <= 85 else EXTENDED_CHARS
     digits = []
     while num:
-        digits.append(BASE85_CHARS[num % base])
+        digits.append(chars[num % base])
         num //= base
     return ''.join(digits[::-1])
 
 # Convert a string in a given base to an integer
 def from_base(s, base):
     validate_base(base)
-    return sum(BASE85_CHARS.index(char) * (base ** i) for i, char in enumerate(reversed(s)))
+    chars = BASE85_CHARS if base <= 85 else EXTENDED_CHARS
+    return sum(chars.index(char) * (base ** i) for i, char in enumerate(reversed(s)))
 
 # Generalized Base N encoding and decoding
 def baseN(input_string, action, base):
@@ -321,3 +329,48 @@ def base85(input_string, action):
         return base85_encode(input_string)
     elif action == 'decode':
         return base85_decode(input_string)
+
+def base86(input_string, action):
+    return baseN(input_string, action, 86)
+
+def base87(input_string, action):
+    return baseN(input_string, action, 87)
+
+def base88(input_string, action):
+    return baseN(input_string, action, 88)
+
+def base89(input_string, action):
+    return baseN(input_string, action, 89)
+
+def base90(input_string, action):
+    return baseN(input_string, action, 90)
+
+def base91(input_string, action):
+    return baseN(input_string, action, 91)
+
+def base92(input_string, action):
+    return baseN(input_string, action, 92)
+
+def base93(input_string, action):
+    return baseN(input_string, action, 93)
+
+def base94(input_string, action):
+    return baseN(input_string, action, 94)
+
+def base95(input_string, action):
+    return baseN(input_string, action, 95)
+
+def base96(input_string, action):
+    return baseN(input_string, action, 96)
+
+def base97(input_string, action):
+    return baseN(input_string, action, 97)
+
+def base98(input_string, action):
+    return baseN(input_string, action, 98)
+
+def base99(input_string, action):
+    return baseN(input_string, action, 99)
+
+def base100(input_string, action):
+    return baseN(input_string, action, 100)

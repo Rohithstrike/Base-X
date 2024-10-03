@@ -105,7 +105,22 @@ def process():
         'base82': base82,
         'base83': base83,
         'base84': base84,
-        'base85': base85,
+        'base85': base85,  # Ensure this is defined in your main module
+        'base86': base86,
+        'base87': base87,
+        'base88': base88,
+        'base89': base89,
+        'base90': base90,
+        'base91': base91,
+        'base92': base92,
+        'base93': base93,
+        'base94': base94,
+        'base95': base95,
+        'base96': base96,
+        'base97': base97,
+        'base98': base98,
+        'base99': base99,
+        'base100': base100,
     }
     
     # Check if the selected base is valid and call the corresponding function
