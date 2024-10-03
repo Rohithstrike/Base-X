@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-from main import *  # Make sure to import your main functions
+from main import *  # Ensure to import your main functions
 
 app = Flask(__name__)
 
@@ -15,6 +15,10 @@ def process():
     base = data.get('base')
     input_string = data.get('inputString')
     action = data.get('action')
+
+    # Check for valid action
+    if action not in ['encode', 'decode']:
+        return jsonify({'error': 'Invalid action selected'}), 400
 
     # Dictionary to map bases to functions
     base_functions = {
@@ -80,8 +84,28 @@ def process():
         'base61': base61,
         'base62': base62,
         'base63': base63,
-        'base64': base64_custom,  # Change here to use the renamed function
+        'base64': base64_custom,  # Ensure this is defined in your main module
         'base65': base65,
+        'base66': base66,
+        'base67': base67,
+        'base68': base68,
+        'base69': base69,
+        'base70': base70,
+        'base71': base71,
+        'base72': base72,
+        'base73': base73,
+        'base74': base74,
+        'base75': base75,
+        'base76': base76,
+        'base77': base77,
+        'base78': base78,
+        'base79': base79,
+        'base80': base80,
+        'base81': base81,
+        'base82': base82,
+        'base83': base83,
+        'base84': base84,
+        'base85': base85,
     }
     
     # Check if the selected base is valid and call the corresponding function

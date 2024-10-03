@@ -1,38 +1,40 @@
 import string
-import base64 as b64  # Import the built-in base64 library with an alias to avoid naming conflicts
+import base64 as b64
+import struct
 
-# Characters allowed for encoding in bases 2 to 65 (digits, letters, and additional symbols)
-BASE_CHARS = (
-    string.digits +               # 0-9 (10)
-    string.ascii_uppercase +      # A-Z (26)
-    string.ascii_lowercase +      # a-z (26)
-    "!#$%&'()*+,-./:;<=>?@[\]^_`{|}~"  # 32 additional symbols (total of 62)
+# Standard Base85/Ascii85 character set
+BASE85_CHARS = (
+    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&()*+-;<=>?@^_`{|}~"
 )
 
-# Ensure that BASE_CHARS has enough characters for up to base 65
-if len(BASE_CHARS) < 65:
-    raise ValueError("BASE_CHARS must have at least 65 unique characters.")
-
-# Convert an integer to a given base
-def to_base(num, base):
-    if num == 0:
-        return '0'
-    digits = []
-    while num:
-        digits.append(BASE_CHARS[num % base])
-        num //= base
-    return ''.join(digits[::-1])
-
-# Convert a string representation of a number in a given base to an integer
-def from_base(s, base):
-    return sum(BASE_CHARS.index(char) * (base ** i) for i, char in enumerate(reversed(s)))
+# Ensure the base is within valid range
+def validate_base(base):
+    if base < 2 or base > 85:
+        raise ValueError("Base must be between 2 and 85.")
 
 # Helper function to calculate byte length needed for decoding
 def get_byte_length(number):
     return (number.bit_length() + 7) // 8
 
-# Base N Encoding and Decoding (Generalized for base 2 to 65)
+# Convert an integer to a string in the specified base
+def to_base(num, base):
+    validate_base(base)
+    if num == 0:
+        return '0'
+    digits = []
+    while num:
+        digits.append(BASE85_CHARS[num % base])
+        num //= base
+    return ''.join(digits[::-1])
+
+# Convert a string in a given base to an integer
+def from_base(s, base):
+    validate_base(base)
+    return sum(BASE85_CHARS.index(char) * (base ** i) for i, char in enumerate(reversed(s)))
+
+# Generalized Base N encoding and decoding
 def baseN(input_string, action, base):
+    validate_base(base)
     if action == 'encode':
         number = int.from_bytes(input_string.encode(), 'big')
         return to_base(number, base)
@@ -45,14 +47,23 @@ def baseN(input_string, action, base):
         except UnicodeDecodeError:
             return decoded_bytes.decode('latin-1', errors='ignore')
 
-# Base64 Encoding and Decoding using standard library
+# Base64 Encoding and Decoding using the standard library
 def base64_encode(input_string):
     return b64.b64encode(input_string.encode()).decode()
 
 def base64_decode(input_string):
     return b64.b64decode(input_string).decode(errors='ignore')
 
-# Base encoding and decoding functions for bases 2 to 65
+# Ascii85 (Base85) Encoding and Decoding using standard library functions
+def base85_encode(input_string):
+    encoded_bytes = b64.a85encode(input_string.encode(), adobe=False)
+    return encoded_bytes.decode()
+
+def base85_decode(input_string):
+    decoded_bytes = b64.a85decode(input_string, adobe=False)
+    return decoded_bytes.decode()
+
+# Base N encoding and decoding for different bases
 def base2(input_string, action):
     return baseN(input_string, action, 2)
 
@@ -96,10 +107,7 @@ def base15(input_string, action):
     return baseN(input_string, action, 15)
 
 def base16(input_string, action):
-    if action == 'encode':
-        return input_string.encode().hex()  # Hex encoding
-    elif action == 'decode':
-        return bytes.fromhex(input_string).decode(errors='ignore')
+    return baseN(input_string, action, 16)
 
 def base17(input_string, action):
     return baseN(input_string, action, 17)
@@ -250,3 +258,66 @@ def base64_custom(input_string, action):
 
 def base65(input_string, action):
     return baseN(input_string, action, 65)
+
+def base66(input_string, action):
+    return baseN(input_string, action, 66)
+
+def base67(input_string, action):
+    return baseN(input_string, action, 67)
+
+def base68(input_string, action):
+    return baseN(input_string, action, 68)
+
+def base69(input_string, action):
+    return baseN(input_string, action, 69)
+
+def base70(input_string, action):
+    return baseN(input_string, action, 70)
+
+def base71(input_string, action):
+    return baseN(input_string, action, 71)
+
+def base72(input_string, action):
+    return baseN(input_string, action, 72)
+
+def base73(input_string, action):
+    return baseN(input_string, action, 73)
+
+def base74(input_string, action):
+    return baseN(input_string, action, 74)
+
+def base75(input_string, action):
+    return baseN(input_string, action, 75)
+
+def base76(input_string, action):
+    return baseN(input_string, action, 76)
+
+def base77(input_string, action):
+    return baseN(input_string, action, 77)
+
+def base78(input_string, action):
+    return baseN(input_string, action, 78)
+
+def base79(input_string, action):
+    return baseN(input_string, action, 79)
+
+def base80(input_string, action):
+    return baseN(input_string, action, 80)
+
+def base81(input_string, action):
+    return baseN(input_string, action, 81)
+
+def base82(input_string, action):
+    return baseN(input_string, action, 82)
+
+def base83(input_string, action):
+    return baseN(input_string, action, 83)
+
+def base84(input_string, action):
+    return baseN(input_string, action, 84)
+
+def base85(input_string, action):
+    if action == 'encode':
+        return base85_encode(input_string)
+    elif action == 'decode':
+        return base85_decode(input_string)
