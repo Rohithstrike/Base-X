@@ -11,6 +11,11 @@ EXTENDED_CHARS = (
     string.digits + string.ascii_uppercase + string.ascii_lowercase + string.punctuation + " "
 )
 
+# Base92 character set
+BASE92_CHARS = (
+    string.digits + string.ascii_uppercase + string.ascii_lowercase + "!#$%&()*+,-./:;<=>?@[]^_`{|}~"
+)
+
 # Ensure the base is within the valid range
 def validate_base(base):
     if base < 2 or base > 100:
@@ -69,6 +74,75 @@ def base85_decode(input_string):
     decoded_bytes = b64.a85decode(input_string, adobe=False)
     return decoded_bytes.decode()
 
+# Base92 Encoding
+def base92_encode(input_string):
+    # Convert input to binary string
+    binary_string = ''.join(f'{byte:08b}' for byte in input_string.encode())
+    
+    # Split into 13-bit blocks
+    blocks = [binary_string[i:i+13] for i in range(0, len(binary_string), 13)]
+    
+    encoded = ''
+    for block in blocks:
+        if len(block) < 13:
+            block = block.ljust(13, '0')  # Pad block to 13 bits if shorter
+        
+        # Convert 13-bit block to integer
+        block_value = int(block, 2)
+        
+        # Map to two base 91 characters
+        first_char_index = block_value // 91
+        second_char_index = block_value % 91
+        
+        encoded += BASE92_CHARS[first_char_index] + BASE92_CHARS[second_char_index]
+    
+    return encoded
+
+# Base92 Decoding
+def base92_decode(input_string):
+    if len(input_string) % 2 != 0:
+        raise ValueError("Invalid Base92 encoded string length.")
+    
+    decoded_bits = ''
+    for i in range(0, len(input_string), 2):
+        first_char = input_string[i]
+        second_char = input_string[i + 1]
+        
+        # Get the index of both characters in the Base91 alphabet
+        first_char_index = BASE92_CHARS.index(first_char)
+        second_char_index = BASE92_CHARS.index(second_char)
+        
+        # Calculate 13-bit block value
+        block_value = first_char_index * 91 + second_char_index
+        
+        # Convert to 13-bit binary and append to the result
+        decoded_bits += f'{block_value:013b}'
+    
+    # Convert binary string to bytes
+    byte_length = (len(decoded_bits) + 7) // 8
+    decoded_bytes = int(decoded_bits, 2).to_bytes(byte_length, 'big')
+    
+    try:
+        return decoded_bytes.decode('utf-8').rstrip('\x00')
+    except UnicodeDecodeError:
+        return decoded_bytes.decode('latin-1', errors='ignore')
+
+# Base N encoding and decoding for different bases (2 to 100)
+def base2(input_string, action):
+    return baseN(input_string, action, 2)
+
+def base3(input_string, action):
+    return baseN(input_string, action, 3)
+
+# ... other base functions up to base 91
+
+def base92_custom(input_string, action):
+    if action == 'encode':
+        return base92_encode(input_string)
+    elif action == 'decode':
+        return base92_decode(input_string)
+
+# ... other base functions up to base 100
 # Base N encoding and decoding for different bases (2 to 100)
 def base2(input_string, action):
     return baseN(input_string, action, 2)
@@ -322,7 +396,7 @@ def base83(input_string, action):
 def base84(input_string, action):
     return baseN(input_string, action, 84)
 
-def base85(input_string, action):
+def base85_custom(input_string, action):
     if action == 'encode':
         return base85_encode(input_string)
     elif action == 'decode':

@@ -105,7 +105,7 @@ def process():
         'base82': base82,
         'base83': base83,
         'base84': base84,
-        'base85': base85,  # Ensure this is defined in your main module
+        'base85': base85_custom,  # Ensure this is defined in your main module
         'base86': base86,
         'base87': base87,
         'base88': base88,
