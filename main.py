@@ -1,19 +1,17 @@
 import string
 import base64 as b64
-import struct
 
 # Standard Base85/Ascii85 character set
 BASE85_CHARS = (
     "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&()*+-;<=>?@^_`{|}~"
 )
 
-# Extended character set for bases greater than 85
+# Extended character set for bases greater than 85, including all printable ASCII chars
 EXTENDED_CHARS = (
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-    "!#$%&()*+-;<=>?@^_`{|}~" + string.ascii_letters + string.punctuation + " "
+    string.digits + string.ascii_uppercase + string.ascii_lowercase + string.punctuation + " "
 )
 
-# Ensure the base is within valid range
+# Ensure the base is within the valid range
 def validate_base(base):
     if base < 2 or base > 100:
         raise ValueError("Base must be between 2 and 100.")
@@ -71,7 +69,7 @@ def base85_decode(input_string):
     decoded_bytes = b64.a85decode(input_string, adobe=False)
     return decoded_bytes.decode()
 
-# Base N encoding and decoding for different bases
+# Base N encoding and decoding for different bases (2 to 100)
 def base2(input_string, action):
     return baseN(input_string, action, 2)
 

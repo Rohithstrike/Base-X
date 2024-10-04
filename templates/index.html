@@ -10,12 +10,11 @@
     <div class="content-wrapper">
         <div class="main-container">
             <h1>PROJECT BASE X</h1>
-            
+
             <div class="controls">
                 <div class="select-container">
                     <label for="baseSelect">Select Base:</label>
-                    <select id="baseSelect">
-                        <!-- Bases 2 to 100 -->
+                    <select id="baseSelect" class="animate-pop">
                         <option value="base2">Base 2</option>
                         <option value="base3">Base 3</option>
                         <option value="base4">Base 4</option>
@@ -119,14 +118,14 @@
                 </div>
 
                 <div class="btn-group">
-                    <button onclick="processAction('encode')">Encode</button>
-                    <button onclick="processAction('decode')">Decode</button>
+                    <button onclick="processAction('encode')" class="btn animate-slide-up">Encode</button>
+                    <button onclick="processAction('decode')" class="btn animate-slide-up">Decode</button>
                 </div>
             </div>
 
             <div class="input-output-container">
                 <div class="box">
-                    <textarea id="inputString" placeholder="Enter string here..."></textarea>
+                    <textarea id="inputString" class="input-area" placeholder="Enter string here..."></textarea>
                 </div>
                 <div class="box">
                     <textarea id="outputString" class="output-area" placeholder="Output will be displayed here..." readonly></textarea>
