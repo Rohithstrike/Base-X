@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base X Converter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#6366f1',
+                            dark: '#4f46e5'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-900 text-gray-100 min-h-screen flex items-center justify-center p-4 md:p-8">
+    <div class="w-full max-w-6xl bg-slate-800 rounded-3xl shadow-2xl p-6 md:p-10">
+        <!-- Header Section -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
+                Base X Converter
+            </h1>
+            <p class="text-gray-400 text-lg">Convert your text between different number bases</p>
+        </header>
+
+        <!-- Controls Section -->
+        <div class="grid grid-cols-1 md:grid-cols-[2fr,1fr] gap-6 mb-8">
+            <!-- Select Dropdown -->
+            <div class="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
+                <select id="baseSelect" class="w-full px-4 py-3 bg-slate-700/50 border border-indigo-500/20 rounded-xl text-gray-100 appearance-none focus:outline-none focus:border-indigo-500 transition-all cursor-pointer sm:py-4">
+                    <option value="base2" class="bg-slate-700 py-2">Base 2 (Binary)</option>
+                    <option value="base3" class="bg-slate-700 py-2">Base 3 (Ternary)</option>
+                    <option value="base8" class="bg-slate-700 py-2">Base 8 (Octal)</option>
+                    <option value="base10" class="bg-slate-700 py-2">Base 10 (Decimal)</option>
+                    <option value="base16" class="bg-slate-700 py-2">Base 16 (Hexadecimal)</option>
+                    <option value="base32" class="bg-slate-700 py-2">Base 32</option>
+                    <option value="base36" class="bg-slate-700 py-2">Base 36</option>
+                    <option value="base58" class="bg-slate-700 py-2">Base 58</option>
+                    <option value="base64" class="bg-slate-700 py-2">Base 64</option>
+                    <option value="base85" class="bg-slate-700 py-2">Base 85 (ASCII)</option>
+                    <option value="base91" class="bg-slate-700 py-2">Base 91</option>
+                    <option value="base122" class="bg-slate-700 py-2">Base 122</option>
+                    <option value="base256" class="bg-slate-700 py-2">Base 256</option>
+                </select>
+                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-indigo-500">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+            
+
+            <!-- Button Group -->
+            <div class="flex gap-4">
+                <button onclick="processAction('encode')" class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:-translate-y-1 active:translate-y-0">
+                    <i class="fas fa-lock"></i>
+                    <span>Encode</span>
+                </button>
+                <button onclick="processAction('decode')" class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:-translate-y-1 active:translate-y-0">
+                    <i class="fas fa-lock-open"></i>
+                    <span>Decode</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Converter Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Input Box -->
+            <div class="relative">
+                <span class="absolute -top-3 left-4 px-2 bg-slate-800 text-gray-400 text-sm">
+                    Input
+                </span>
+                <textarea
+                    id="inputString"
+                    class="w-full h-64 bg-slate-700/50 border border-indigo-500/20 rounded-xl p-4 text-gray-100 focus:outline-none focus:border-indigo-500 transition-all resize-none"
+                    placeholder="Enter your text here..."
+                ></textarea>
+            </div>
+
+            <!-- Output Box -->
+            <div class="relative">
+                <span class="absolute -top-3 left-4 px-2 bg-slate-800 text-gray-400 text-sm">
+                    Output
+                </span>
+                <textarea
+                    id="outputString"
+                    class="w-full h-64 bg-slate-700/50 border border-indigo-500/20 rounded-xl p-4 text-gray-100 resize-none"
+                    placeholder="Converted text will appear here..."
+                    readonly
+                ></textarea>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-400 text-sm">
+            <p>&copy; 2024 Base X Converter | Designed by Rohith B</p>
+        </footer>
+    </div>
+
+    <script>
+        async function processAction(action) {
+            const base = document.getElementById('baseSelect').value;
+            const inputString = document.getElementById('inputString').value;
+
+            try {
+                const response = await fetch('/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ base, inputString, action })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('outputString').value = result.result;
+                } else {
+                    document.getElementById('outputString').value = `Error: ${result.error}`;
+                }
+            } catch (error) {
+                document.getElementById('outputString').value = `Error: ${error.message}`;
+            }
+        }
+    </script>
+    <script src="script.js"></script>
+
+</body>
+</html>
